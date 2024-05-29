@@ -1,0 +1,67 @@
+body {
+    background-color: black;
+    color: magenta;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Press Start 2P', cursive; /* 8-bit 폰트 */
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    text-align: center;
+}
+
+.game-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-option img {
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    border: 2px solid magenta;
+}
+
+.btn {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    background-color: yellow;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+.btn:active {
+    transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .game-option img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .btn {
+        width: 150px;
+        font-size: 1rem;
+    }
+}

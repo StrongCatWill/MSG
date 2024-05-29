@@ -1,0 +1,15 @@
+{
+    "editor.mouseWheelZoom": true,
+    "workbench.colorTheme": "GitHub Dark Dimmed",
+    "window.zoomLevel": 1,
+    "security.workspace.trust.untrustedFiles": "open",
+    "vscode-pets.petColor": "akita",
+    "vscode-pets.petSize": "small",
+    "vscode-pets.throwBallWithMouse": true,
+    "powermode.enabled": true,
+    "python.pythonPath": "${workspaceFolder}/myenv/bin/python",
+    "powermode.shake.enabled": false,
+    "emmet.variables": {
+        "lang": "ko"
+    }
+}

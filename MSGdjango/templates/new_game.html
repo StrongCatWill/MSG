@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select a Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'new_game.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="game-option">
+            <img src="{% static 'snake.png' %}" alt="Snake Game">
+            <button class="btn">Snake</button>
+        </div>
+        <div class="game-option">
+            <img src="{% static 'tictactoe.png' %}" alt="Tic Tac Toe Game">
+            <button class="btn">Tic Tac Toe</button>
+        </div>
+        <div class="game-option">
+            <img src="{% static 'typing.png' %}" alt="Typing Game">
+            <button class="btn">Typing</button>
+        </div>
+        <div class="game-option">
+            <img src="{% static 'memory.png' %}" alt="Memory Game">
+            <button class="btn">Memory</button>
+        </div>
+    </div>
+</body>
+</html>

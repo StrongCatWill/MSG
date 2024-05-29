@@ -1,0 +1,77 @@
+body {
+    background-color: black;
+    color: magenta;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Press Start 2P', cursive; /* 8-bit 폰트 */
+}
+
+.container {
+    text-align: center;
+}
+
+.logo {
+    font-size: 4rem;
+    color: magenta;
+    animation: logo-animation 2s infinite;
+}
+
+@keyframes logo-animation {
+    0%, 100% {
+        transform: scale(1);
+        color: magenta;
+    }
+    50% {
+        transform: scale(1.2);
+        color: cyan;
+    }
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: magenta;
+    margin-top: 20px;  /* 로고와 h2 사이의 간격 조절 */
+}
+
+.button-container {
+    margin-top: 40px;  /* 로고와 버튼 사이의 간격 조절 */
+}
+
+.btn {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 10px auto;
+    font-size: 1.2rem;
+    background-color: yellow;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+.btn:active {
+    transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+    .logo {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .btn {
+        width: 150px;
+        font-size: 1rem;
+    }
+}
