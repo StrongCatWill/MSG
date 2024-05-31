@@ -1,0 +1,65 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+}
+
+.container {
+    width: 80%; /* 전체 너비의 80%를 사용 */
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.score, .high-score {
+    font-size: 1.5rem;
+}
+
+.title {
+    font-size: 2rem;
+}
+
+.game-frame {
+    position: relative;
+    width: 100%; /* 전체 너비의 100%를 사용 */
+    height: 100%; /* 전체 높이의 100%를 사용 */
+    margin: 0 auto;
+    border: 2px solid #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+}
+
+.game-over-text {
+    font-size: 2rem;
+    color: red;
+}

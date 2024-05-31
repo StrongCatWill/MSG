@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'snake_game.css' %}">
+    <link rel="stylesheet" href="{% static 'options.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="score">Score<br><span id="currentScore">0000</span></div>
+            <div class="title">Tic Tac Toe</div>
+            <div class="high-score">High Score<br><span id="highScore">0000</span></div>
+        </div>
+        <div class="game-frame">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="settings-icon" id="settings-icon">
+            <img src="{% static 'img/settings.png' %}" alt="Settings">
+        </div>
+        <div id="game-over" class="game-over">
+            <div class="game-over-text">Game Over</div>
+        </div>
+    </div>
+
+    {% include 'options.html' %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById("gameCanvas");
+            const context = canvas.getContext("2d");
+            const gridSize = 133;
+            let score = 0;
+            let highScore = 0;
+            let player = 0;
+            let board = Array(3).fill().map(() => Array(3).fill(null));
+
+            function line(x1, y1, x2, y2) {
+                context.beginPath();
+                context.moveTo(x1, y1);
+                context.lineTo(x2, y2);
+                context.stroke();
+            }
+
+            function grid() {
+                line(133, 0, 133, 400);
+                line(267, 0, 267, 400);
+                line(0, 133, 400, 133);
+                line(0, 267, 400, 267);
+            }
+
+            function drawX(x, y) {
+                line(x, y, x + gridSize, y + gridSize);
+                line(x, y + gridSize, x + gridSize, y);
+            }
+
+            function drawO(x, y) {
+                context.beginPath();
+                context.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2, 0, Math.PI * 2);
+                context.stroke();
+            }
+
+            function floor(value) {
+                return Math.floor(value / gridSize) * gridSize;
+            }
+
+            function checkWin() {
+                const lines = [
+                    // Horizontal
+                    [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}],
+                    [{x: 0, y: 1}, {x: 1, y: 1}, {x: 2, y: 1}],
+                    [{x: 0, y: 2}, {x: 1, y: 2}, {x: 2, y: 2}],
+                    // Vertical
+                    [{x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 2}],
+                    [{x: 1, y: 0}, {x: 1, y: 1}, {x: 1, y: 2}],
+                    [{x: 2, y: 0}, {x: 2, y: 1}, {x: 2, y: 2}],
+                    // Diagonal
+                    [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}],
+                    [{x: 0, y: 2}, {x: 1, y: 1}, {x: 2, y: 0}],
+                ];
+
+                for (let line of lines) {
+                    const [a, b, c] = line;
+                    if (board[a.y][a.x] && board[a.y][a.x] === board[b.y][b.x] && board[a.y][a.x] === board[c.y][c.x]) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function checkDraw() {
+                return board.every(row => row.every(cell => cell !== null));
+            }
+
+            function gameOver() {
+                document.getElementById("game-over").style.display = "block";
+                setTimeout(resetGame, 2000);
+            }
+
+            function resetGame() {
+                board = Array(3).fill().map(() => Array(3).fill(null));
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                grid();
+                document.getElementById("game-over").style.display = "none";
+                if (score > highScore) {
+                    highScore = score;
+                    document.getElementById("highScore").innerText = highScore.toString().padStart(4, '0');
+                }
+                score = 0;
+                document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
+            }
+
+            function tap(event) {
+                const rect = canvas.getBoundingClientRect();
+                const x = floor(event.clientX - rect.left);
+                const y = floor(event.clientY - rect.top);
+                const gridX = x / gridSize;
+                const gridY = y / gridSize;
+
+                if (board[gridY][gridX] !== null) {
+                    return;
+                }
+
+                board[gridY][gridX] = player;
+                if (player === 0) {
+                    drawX(x, y);
+                } else {
+                    drawO(x, y);
+                }
+
+                if (checkWin()) {
+                    score += 200;
+                    document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
+                    gameOver();
+                } else if (checkDraw()) {
+                    gameOver();
+                } else {
+                    player = 1 - player;
+                }
+            }
+
+            canvas.addEventListener("click", tap);
+
+            context.lineWidth = 2;
+            grid();
+        });
+    </script>
+</body>
+</html>

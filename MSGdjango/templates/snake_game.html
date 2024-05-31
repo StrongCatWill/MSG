@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'snake_game.css' %}">
+    <link rel="stylesheet" href="{% static 'options.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="score">Score<br>0000</div>
+            <div class="title">Snake</div>
+            <div class="high-score">High Score<br>0000</div>
+        </div>
+        <div class="game-frame">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="settings-icon" id="settings-icon">
+            <img src="{% static 'img/settings.png' %}" alt="Settings">
+        </div>
+        <div id="game-over" class="game-over">
+            <div class="game-over-text">Game Over</div>
+        </div>
+    </div>
+    
+    {% include 'options.html' %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            const canvas = document.getElementById("gameCanvas");
+            const context = canvas.getContext("2d");
+            const settingsIcon = document.getElementById("settings-icon");
+            const optionTool = document.getElementById("option-tool");
+            const closeSettings = document.getElementById("close-settings");
+            const continueGame = document.getElementById("continue-game");
+            const backToMain = document.getElementById("back-to-main");
+            const backToTitle = document.getElementById("back-to-title");
+            const quitGame = document.getElementById("quit-game");
+            const gameOverText = document.getElementById("game-over");
+
+            settingsIcon.addEventListener("click", function() {
+                optionTool.style.display = "block";
+            });
+
+            closeSettings.addEventListener("click", function() {
+                optionTool.style.display = "none";
+            });
+
+            continueGame.addEventListener("click", function() {
+                optionTool.style.display = "none";
+            });
+
+            backToMain.addEventListener("click", function() {
+                window.location.href = "{% url 'new_game' %}";
+            });
+
+            backToTitle.addEventListener("click", function() {
+                window.location.href = "{% url 'index' %}";
+            });
+
+            quitGame.addEventListener("click", function() {
+                window.close();
+            });
+
+            const grid = 20;
+            let count = 0;
+            let score = 0;
+            let maxScore = 0;
+
+            let snake = {
+                x: 160,
+                y: 160,
+                dx: grid,
+                dy: 0,
+                cells: [],
+                maxCells: 4
+            };
+
+            let food = {
+                x: 320,
+                y: 320
+            };
+
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min)) + min;
+            }
+
+            function resetGame() {
+                snake.x = 160;
+                snake.y = 160;
+                snake.cells = [];
+                snake.maxCells = 4;
+                snake.dx = grid;
+                snake.dy = 0;
+                if (score > maxScore) {
+                    maxScore = score;
+                    document.querySelector(".high-score").innerHTML = "High Score<br>" + maxScore;
+                }
+                score = 0;
+                document.querySelector(".score").innerHTML = "Score<br>" + score;
+                food.x = getRandomInt(0, 25) * grid;
+                food.y = getRandomInt(0, 25) * grid;
+                gameOverText.style.display = "none";
+            }
+
+            function gameOver() {
+                gameOverText.style.display = "block";
+                setTimeout(resetGame, 2000);
+            }
+
+            function loop() {
+                requestAnimationFrame(loop);
+
+                if (++count < 4) {
+                    return;
+                }
+
+                count = 0;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                snake.x += snake.dx;
+                snake.y += snake.dy;
+
+                if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+                    gameOver();
+                    return;
+                }
+
+                snake.cells.unshift({ x: snake.x, y: snake.y });
+
+                if (snake.cells.length > snake.maxCells) {
+                    snake.cells.pop();
+                }
+
+                context.fillStyle = "green";
+                context.fillRect(food.x, food.y, grid - 1, grid - 1);
+
+                context.fillStyle = "black";
+                snake.cells.forEach(function(cell, index) {
+                    context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+                    if (cell.x === food.x && cell.y === food.y) {
+                        snake.maxCells++;
+                        score += 100;
+                        document.querySelector(".score").innerHTML = "Score<br>" + score;
+                        food.x = getRandomInt(0, 25) * grid;
+                        food.y = getRandomInt(0, 25) * grid;
+                    }
+
+                    for (let i = index + 1; i < snake.cells.length; i++) {
+                        if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                            gameOver();
+                            return;
+                        }
+                    }
+                });
+            }
+
+            document.addEventListener("keydown", function(e) {
+                if (e.which === 37 && snake.dx === 0) {
+                    snake.dx = -grid;
+                    snake.dy = 0;
+                } else if (e.which === 38 && snake.dy === 0) {
+                    snake.dy = -grid;
+                    snake.dx = 0;
+                } else if (e.which === 39 && snake.dx === 0) {
+                    snake.dx = grid;
+                    snake.dy = 0;
+                } else if (e.which === 40 && snake.dy === 0) {
+                    snake.dy = grid;
+                    snake.dx = 0;
+                }
+            });
+
+            requestAnimationFrame(loop);
+        });
+    </script>
+</body>
+</html>

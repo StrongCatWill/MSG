@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'snake_game.css' %}">
+    <link rel="stylesheet" href="{% static 'options.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="score">Score<br><span id="currentScore">0000</span></div>
+            <div class="title">Typing</div>
+            <div class="high-score">High Score<br><span id="highScore">0000</span></div>
+        </div>
+        <div class="game-frame">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="settings-icon" id="settings-icon">
+            <img src="{% static 'img/settings.png' %}" alt="Settings">
+        </div>
+        <div id="game-over" class="game-over">
+            <div class="game-over-text">Game Over</div>
+        </div>
+    </div>
+
+    {% include 'options.html' %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById("gameCanvas");
+            const context = canvas.getContext("2d");
+            const asciiLowercase = 'abcdefghijklmnopqrstuvwxyz';
+            const targets = [];
+            const letters = [];
+            let score = 0;
+            let highScore = 0;
+
+            function clear() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function draw() {
+                clear();
+                context.font = '20px Consolas';
+                context.textAlign = 'center';
+
+                for (let i = 0; i < targets.length; i++) {
+                    const target = targets[i];
+                    const letter = letters[i];
+                    context.fillText(letter, target.x, target.y);
+                }
+            }
+
+            function move() {
+                if (Math.random() < 0.05) {
+                    const x = Math.floor(Math.random() * (canvas.width - 50)) + 25;
+                    const target = {x: x, y: canvas.height};
+                    targets.push(target);
+                    const letter = asciiLowercase[Math.floor(Math.random() * asciiLowercase.length)];
+                    letters.push(letter);
+                }
+
+                for (let target of targets) {
+                    target.y -= 2;
+                }
+
+                draw();
+
+                for (let target of targets) {
+                    if (target.y < 0) {
+                        gameOver();
+                        return;
+                    }
+                }
+
+                setTimeout(move, 100);
+            }
+
+            function press(event) {
+                const key = event.key.toLowerCase();
+                const index = letters.indexOf(key);
+
+                if (index !== -1) {
+                    score += 100;
+                    document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
+                    targets.splice(index, 1);
+                    letters.splice(index, 1);
+                    if (score > highScore) {
+                        highScore = score;
+                        document.getElementById("highScore").innerText = highScore.toString().padStart(4, '0');
+                    }
+                } else {
+                    score = Math.max(0, score - 100);
+                    document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
+                }
+            }
+
+            function gameOver() {
+                document.getElementById("game-over").style.display = "block";
+                setTimeout(resetGame, 2000);
+            }
+
+            function resetGame() {
+                targets.length = 0;
+                letters.length = 0;
+                score = 0;
+                document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
+                document.getElementById("game-over").style.display = "none";
+                move();
+            }
+
+            document.addEventListener("keypress", press);
+            move();
+
+            // Settings icon functionality
+            const settingsIcon = document.getElementById("settings-icon");
+            const optionTool = document.getElementById("option-tool");
+            const closeSettings = document.getElementById("close-settings");
+
+            settingsIcon.addEventListener("click", function() {
+                optionTool.style.display = "block";
+            });
+
+            closeSettings.addEventListener("click", function() {
+                optionTool.style.display = "none";
+            });
+        });
+    </script>
+</body>
+</html>

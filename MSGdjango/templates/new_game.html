@@ -7,25 +7,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     {% load static %}
     <link rel="stylesheet" href="{% static 'new_game.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="game-option">
-            <img src="{% static 'snake.png' %}" alt="Snake Game">
-            <button class="btn">Snake</button>
+            <img src="{% static 'img/snake.png' %}" alt="Snake Game">
+            <button class="btn retro-btn" id="snake-button">Play Snake</button>
         </div>
         <div class="game-option">
-            <img src="{% static 'tictactoe.png' %}" alt="Tic Tac Toe Game">
-            <button class="btn">Tic Tac Toe</button>
+            <img src="{% static 'img/tictactoe.png' %}" alt="Tic Tac Toe Game">
+            <button class="btn retro-btn" id="tictactoe-button">Play Tic Tac Toe</button>
         </div>
         <div class="game-option">
-            <img src="{% static 'typing.png' %}" alt="Typing Game">
-            <button class="btn">Typing</button>
+            <img src="{% static 'img/typing.png' %}" alt="Typing Game">
+            <button class="btn retro-btn" id="typing-button">Play Typing</button>
         </div>
         <div class="game-option">
-            <img src="{% static 'memory.png' %}" alt="Memory Game">
-            <button class="btn">Memory</button>
+            <img src="{% static 'img/memory.png' %}" alt="Memory Game">
+            <button class="btn retro-btn" id="memory-button">Play Memory</button>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#snake-button').click(function() {
+                window.location.href = "{% url 'snake_game_view' %}";
+            });
+
+            $('#tictactoe-button').click(function() {
+                window.location.href = "{% url 'tictactoe_game_view' %}";
+            });
+
+            $('#typing-button').click(function() {
+                window.location.href = "{% url 'typing_game_view' %}";
+            });
+
+            $('#memory-button').click(function() {
+                window.location.href = "{% url 'memory_game_view' %}";
+            });
+        });
+    </script>
 </body>
 </html>

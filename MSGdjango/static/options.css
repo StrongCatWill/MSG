@@ -1,0 +1,104 @@
+/* snake_game.css */
+body {
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    position: relative;
+}
+
+.container {
+    text-align: center;
+    width: 420px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.score, .high-score, .title {
+    flex: 1;
+}
+
+.game-frame {
+    background-color: #fff;
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.option-tool {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #00ff00;
+    padding: 20px;
+    z-index: 100;
+    width: 300px;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option-header h2 {
+    margin: 0;
+    color: #00ff00;
+}
+
+.close-btn {
+    cursor: pointer;
+    color: #ff00ff;
+    font-size: 24px;
+}
+
+.option-body {
+    margin-top: 20px;
+}
+
+.retro-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #000;
+    background-color: #ff0;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.retro-btn:hover {
+    background-color: #ffcc00;
+}
+
+.settings-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.settings-icon img {
+    width: 30px;
+    height: 30px;
+}
