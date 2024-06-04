@@ -68,6 +68,7 @@
             });
 
             const grid = 20;
+            const gameSpeed = 100; // 게임 속도 (밀리초 단위로 설정)
             let count = 0;
             let score = 0;
             let maxScore = 0;
@@ -114,51 +115,53 @@
             }
 
             function loop() {
-                requestAnimationFrame(loop);
+                setTimeout(function() {
+                    requestAnimationFrame(loop);
 
-                if (++count < 4) {
-                    return;
-                }
-
-                count = 0;
-                context.clearRect(0, 0, canvas.width, canvas.height);
-
-                snake.x += snake.dx;
-                snake.y += snake.dy;
-
-                if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
-                    gameOver();
-                    return;
-                }
-
-                snake.cells.unshift({ x: snake.x, y: snake.y });
-
-                if (snake.cells.length > snake.maxCells) {
-                    snake.cells.pop();
-                }
-
-                context.fillStyle = "green";
-                context.fillRect(food.x, food.y, grid - 1, grid - 1);
-
-                context.fillStyle = "black";
-                snake.cells.forEach(function(cell, index) {
-                    context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
-
-                    if (cell.x === food.x && cell.y === food.y) {
-                        snake.maxCells++;
-                        score += 100;
-                        document.querySelector(".score").innerHTML = "Score<br>" + score;
-                        food.x = getRandomInt(0, 25) * grid;
-                        food.y = getRandomInt(0, 25) * grid;
+                    if (++count < 4) {
+                        return;
                     }
 
-                    for (let i = index + 1; i < snake.cells.length; i++) {
-                        if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-                            gameOver();
-                            return;
+                    count = 0;
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+
+                    snake.x += snake.dx;
+                    snake.y += snake.dy;
+
+                    if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+                        gameOver();
+                        return;
+                    }
+
+                    snake.cells.unshift({ x: snake.x, y: snake.y });
+
+                    if (snake.cells.length > snake.maxCells) {
+                        snake.cells.pop();
+                    }
+
+                    context.fillStyle = "green";
+                    context.fillRect(food.x, food.y, grid - 1, grid - 1);
+
+                    context.fillStyle = "black";
+                    snake.cells.forEach(function(cell, index) {
+                        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+                        if (cell.x === food.x && cell.y === food.y) {
+                            snake.maxCells++;
+                            score += 100;
+                            document.querySelector(".score").innerHTML = "Score<br>" + score;
+                            food.x = getRandomInt(0, 25) * grid;
+                            food.y = getRandomInt(0, 25) * grid;
                         }
-                    }
-                });
+
+                        for (let i = index + 1; i < snake.cells.length; i++) {
+                            if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                                gameOver();
+                                return;
+                            }
+                        }
+                    });
+                }, gameSpeed);
             }
 
             document.addEventListener("keydown", function(e) {

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'snake_game.css' %}">
+    <link rel="stylesheet" href="{% static 'options.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="score">Score<br><span id="currentScore">0000</span></div>
+            <div class="title">Flappy</div>
+            <div class="high-score">High Score<br><span id="highScore">0000</span></div>
+        </div>
+        <div class="game-frame">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="settings-icon" id="settings-icon">
+            <img src="{% static 'img/settings.png' %}" alt="Settings">
+        </div>
+        <div id="game-over" class="game-over">
+            <div class="game-over-text">Game Over</div>
+        </div>
+    </div>
+
+    {% include 'options.html' %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById("gameCanvas");
+            const context = canvas.getContext("2d");
+            const bird = { x: 0, y: 0 };
+            const balls = [];
+            const colors = ["#FF0000", "#FFA500", "#FFFF00", "#008000", "#0000FF", "#800080"];
+            let moveInterval;
+            let score = 0;
+            let highScore = 0;
+
+            function getRandomColor() {
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            function clear() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function draw(alive) {
+                clear();
+                context.beginPath();
+                context.arc(bird.x + canvas.width / 2, bird.y + canvas.height / 2, 10, 0, 2 * Math.PI);
+                context.fillStyle = alive ? 'green' : 'red';
+                context.fill();
+
+                balls.forEach(ball => {
+                    context.beginPath();
+                    context.arc(ball.x + canvas.width / 2, ball.y + canvas.height / 2, 20, 0, 2 * Math.PI);
+                    context.fillStyle = ball.color;
+                    context.fill();
+                });
+            }
+
+            function move() {
+                bird.y -= 5;
+
+                balls.forEach(ball => {
+                    ball.x -= 3;
+                });
+
+                if (Math.random() < 0.1) {
+                    const y = Math.floor(Math.random() * 400) - 200;
+                    const color = getRandomColor();
+                    balls.push({ x: 200, y: y, color: color });
+                }
+
+                while (balls.length > 0 && balls[0].x < -200) {
+                    balls.shift();
+                    score += 50;
+                    document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
+                    if (score > highScore) {
+                        highScore = score;
+                        document.getElementById("highScore").innerText = highScore.toString().padStart(4, '0');
+                    }
+                }
+
+                if (!inside(bird)) {
+                    draw(false);
+                    clearTimeout(moveInterval);
+                    gameOver();
+                    return;
+                }
+
+                for (const ball of balls) {
+                    if (Math.abs(ball.x - bird.x) < 15 && Math.abs(ball.y - bird.y) < 15) {
+                        draw(false);
+                        clearTimeout(moveInterval);
+                        gameOver();
+                        return;
+                    }
+                }
+
+                draw(true);
+                moveInterval = setTimeout(move, 50);
+            }
+
+            function inside(point) {
+                return -200 < point.x && point.x < 200 && -200 < point.y && point.y < 200;
+            }
+
+            function tap() {
+                bird.y += 30;
+            }
+
+            function gameOver() {
+                document.getElementById("game-over").style.display = "block";
+                setTimeout(resetGame, 2000);
+            }
+
+            function resetGame() {
+                bird.x = 0;
+                bird.y = 0;
+                balls.length = 0;
+                score = 0;
+                document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
+                document.getElementById("game-over").style.display = "none";
+                move();
+            }
+
+            canvas.addEventListener('click', tap);
+            document.addEventListener('keydown', function(event) {
+                if (event.code === 'Space') {
+                    tap();
+                }
+            });
+
+            move();
+
+            const settingsIcon = document.getElementById("settings-icon");
+            const optionTool = document.getElementById("option-tool");
+            const closeSettings = document.getElementById("close-settings");
+
+            settingsIcon.addEventListener("click", function() {
+                optionTool.style.display = "block";
+                clearTimeout(moveInterval);
+            });
+
+            closeSettings.addEventListener("click", function() {
+                optionTool.style.display = "none";
+                move();
+            });
+        });
+    </script>
+</body>
+</html>

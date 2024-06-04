@@ -25,6 +25,6 @@ urlpatterns = [
     path('snake-game/', views.snake_game_view, name='snake_game_view'),
     path('tictactoe-game/', views.tictactoe_game_view, name='tictactoe_game_view'),
     path('typing-game/', views.typing_game_view, name='typing_game_view'),
-    path('memory-game/', views.memory_game_view, name='memory_game_view'),
-    path('run-snake/', views.run_snake_script, name='run_snake_script'), # snake 게임 시작
+    path('flappy-game/', views.flappy_game_view, name='flappy_game_view'),
+    # path('memory-game/', views.memory_game_view, name='memory_game_view'),
 ]

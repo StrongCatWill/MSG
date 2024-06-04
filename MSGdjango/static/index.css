@@ -1,3 +1,4 @@
+/* index.css */
 body {
     background-color: black;
     color: magenta;
@@ -50,6 +51,8 @@ h2 {
     color: black;
     border: none;
     cursor: pointer;
+    font-family: 'Press Start 2P', cursive; /* 8-bit 폰트 */
+    text-decoration: none;  /* 밑줄 제거 */
     transition: transform 0.2s;
 }
 

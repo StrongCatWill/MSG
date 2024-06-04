@@ -6,8 +6,39 @@
     </div>
     <div class="option-body">
         <button id="continue-game" class="retro-btn">Continue</button>
-        <button id="back-to-main" class="retro-btn">Back To Main</button>
+        <button id="back-to-main" class="retro-btn">Back Select</button>
         <button id="back-to-title" class="retro-btn">Back To Title</button>
         <button id="quit-game" class="retro-btn">Quit</button>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const optionTool = document.getElementById("option-tool");
+
+        document.getElementById("continue-game").addEventListener("click", function() {
+            optionTool.style.display = "none";
+        });
+
+        document.getElementById("back-to-main").addEventListener("click", function() {
+            window.location.href = "{% url 'new_game' %}";
+        });
+
+        document.getElementById("back-to-title").addEventListener("click", function() {
+            window.location.href = "{% url 'index' %}";
+        });
+
+        document.getElementById("quit-game").addEventListener("click", function() {
+            if (confirm("Are you sure you want to quit?")) {
+                alert("Thank you for playing!");
+                window.open('', '_self', ''); // 새 창을 연 뒤
+                window.close(); // 닫기
+            } else {
+                alert("Continue playing!");
+            }
+        });
+
+        document.getElementById("close-settings").addEventListener("click", function() {
+            optionTool.style.display = "none";
+        });
+    });
+</script>

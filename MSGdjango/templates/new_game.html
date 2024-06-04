@@ -11,21 +11,24 @@
 </head>
 <body>
     <div class="container">
+        <div class="game-option go-back">
+            <button class="btn go-back-btn" id="go-back-button">Go Back</button>
+        </div>
         <div class="game-option">
             <img src="{% static 'img/snake.png' %}" alt="Snake Game">
-            <button class="btn retro-btn" id="snake-button">Play Snake</button>
+            <button class="btn retro-btn" id="snake-button">Snake</button>
         </div>
         <div class="game-option">
             <img src="{% static 'img/tictactoe.png' %}" alt="Tic Tac Toe Game">
-            <button class="btn retro-btn" id="tictactoe-button">Play Tic Tac Toe</button>
+            <button class="btn retro-btn" id="tictactoe-button">Tic Tac Toe</button>
         </div>
         <div class="game-option">
             <img src="{% static 'img/typing.png' %}" alt="Typing Game">
-            <button class="btn retro-btn" id="typing-button">Play Typing</button>
+            <button class="btn retro-btn" id="typing-button">Typing</button>
         </div>
         <div class="game-option">
-            <img src="{% static 'img/memory.png' %}" alt="Memory Game">
-            <button class="btn retro-btn" id="memory-button">Play Memory</button>
+            <img src="{% static 'img/flappy.png' %}" alt="flappy Game">
+            <button class="btn retro-btn" id="flappy-button">Flappy</button>
         </div>
     </div>
 
@@ -43,8 +46,12 @@
                 window.location.href = "{% url 'typing_game_view' %}";
             });
 
-            $('#memory-button').click(function() {
-                window.location.href = "{% url 'memory_game_view' %}";
+            $('#flappy-button').click(function() {
+                window.location.href = "{% url 'flappy_game_view' %}";
+            });
+
+            $('#go-back-button').click(function() {
+                window.location.href = "{% url 'index' %}";
             });
         });
     </script>

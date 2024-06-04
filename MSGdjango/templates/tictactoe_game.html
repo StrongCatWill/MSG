@@ -147,6 +147,18 @@
 
             context.lineWidth = 2;
             grid();
+
+            const settingsIcon = document.getElementById("settings-icon");
+            const optionTool = document.getElementById("option-tool");
+            const closeSettings = document.getElementById("close-settings");
+
+            settingsIcon.addEventListener("click", function() {
+                optionTool.style.display = "block";
+            });
+
+            closeSettings.addEventListener("click", function() {
+                optionTool.style.display = "none";
+            });
         });
     </script>
 </body>

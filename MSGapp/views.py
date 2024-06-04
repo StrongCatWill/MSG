@@ -20,8 +20,8 @@ def tictactoe_game_view(request):
 def typing_game_view(request):
     return render(request, 'typing_game.html')
 
-def memory_game_view(request):
-    return render(request, 'memory_game.html')
+def flappy_game_view(request):
+    return render(request, 'flappy_game.html')
 
 def run_snake_script(request):
     script_path = os.path.join(os.path.dirname(__file__), 'scripts', 'snake_game.py')

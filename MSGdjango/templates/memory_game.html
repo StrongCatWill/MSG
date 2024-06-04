@@ -13,7 +13,7 @@
     <div class="container">
         <div class="header">
             <div class="score">Score<br><span id="currentScore">0000</span></div>
-            <div class="title">Memory</div>
+            <div class="title">Flappy</div>
             <div class="high-score">High Score<br><span id="highScore">0000</span></div>
         </div>
         <div class="game-frame">
@@ -29,126 +29,6 @@
 
     {% include 'options.html' %}
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const canvas = document.getElementById("gameCanvas");
-            const context = canvas.getContext("2d");
-            const gridSize = 100;  // Increased to fit larger canvas
-            let score = 0;
-            let highScore = 0;
-            let state = { mark: null };
-            let hide = Array(64).fill(true);
-            let tiles = Array.from(Array(32).keys()).concat(Array.from(Array(32).keys()));
-            let car = new Image();
-            car.src = "{% static 'img/car.gif' %}";
-
-            function clear() {
-                context.clearRect(0, 0, canvas.width, canvas.height);
-            }
-
-            function drawSquare(x, y) {
-                context.fillStyle = 'white';
-                context.fillRect(x, y, gridSize, gridSize);
-                context.strokeStyle = 'black';
-                context.strokeRect(x, y, gridSize, gridSize);
-            }
-
-            function index(x, y) {
-                return Math.floor((x + 400) / gridSize) + Math.floor((y + 400) / gridSize) * 8;
-            }
-
-            function xy(count) {
-                return { x: (count % 8) * gridSize - 400, y: Math.floor(count / 8) * gridSize - 400 };
-            }
-
-            function tap(event) {
-                const rect = canvas.getBoundingClientRect();
-                const x = event.clientX - rect.left - 400;
-                const y = event.clientY - rect.top - 400;
-                const spot = index(x, y);
-                const mark = state.mark;
-
-                if (mark === null || mark === spot || tiles[mark] !== tiles[spot]) {
-                    state.mark = spot;
-                } else {
-                    hide[spot] = false;
-                    hide[mark] = false;
-                    state.mark = null;
-                    score += 100;
-                    document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
-                    if (score > highScore) {
-                        highScore = score;
-                        document.getElementById("highScore").innerText = highScore.toString().padStart(4, '0');
-                    }
-                }
-
-                draw();
-            }
-
-            function draw() {
-                clear();
-                context.drawImage(car, -400, -400, 800, 800);
-
-                for (let count = 0; count < 64; count++) {
-                    if (hide[count]) {
-                        const { x, y } = xy(count);
-                        drawSquare(x, y);
-                    }
-                }
-
-                const mark = state.mark;
-                if (mark !== null && hide[mark]) {
-                    const { x, y } = xy(mark);
-                    context.fillStyle = 'black';
-                    context.font = '30px Arial';
-                    context.fillText(tiles[mark], x + 10, y + 35);
-                }
-
-                if (hide.every(hidden => !hidden)) {
-                    document.getElementById("game-over").style.display = "block";
-                    setTimeout(resetGame, 2000);
-                } else {
-                    setTimeout(draw, 100);
-                }
-            }
-
-            function resetGame() {
-                state = { mark: null };
-                hide = Array(64).fill(true);
-                tiles = Array.from(Array(32).keys()).concat(Array.from(Array(32).keys()));
-                shuffle(tiles);
-                score = 0;
-                document.getElementById("currentScore").innerText = score.toString().padStart(4, '0');
-                document.getElementById("game-over").style.display = "none";
-                draw();
-            }
-
-            function shuffle(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-            }
-
-            car.onload = function() {
-                shuffle(tiles);
-                canvas.addEventListener("click", tap);
-                draw();
-            };
-
-            // Settings icon functionality
-            const settingsIcon = document.getElementById("settings-icon");
-            const optionTool = document.getElementById("option-tool");
-            const closeSettings = document.getElementById("close-settings");
-
-            settingsIcon.addEventListener("click", function() {
-                optionTool.style.display = "block";
-            });
-
-            closeSettings.addEventListener("click", function() {
-                optionTool.style.display = "none";
-            });
-        });
-    </script>
+    
 </body>
 </html>
