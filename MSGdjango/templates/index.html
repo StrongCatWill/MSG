@@ -14,7 +14,7 @@
         <h2>Mega Simple Games</h2>
         <div class="button-container">
             <a href="{% url 'new_game' %}" class="btn">New Game</a>
-            <button class="btn">Continue</button>
+            <button href="{% url 'new_game' %}" class="btn">Continue</button>
             <button class="btn" id="quit">Quit</button>
         </div>
     </div>
@@ -25,8 +25,8 @@
             document.getElementById("quit").addEventListener("click", function() {
                 if (confirm("Are you sure you want to quit?")) {
                     alert("Thank you for playing!");
-                    window.open('', '_self', ''); // 새 창을 연 뒤
-                    window.close(); // 닫기
+                    window.open('', '_self', ''); 
+                    window.close(); 
                 } else {
                     alert("Continue playing!");
                 }

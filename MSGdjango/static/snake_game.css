@@ -28,6 +28,8 @@ body {
 
 .title {
     font-size: 2rem;
+    color: yellow;
+    -webkit-text-stroke: 0.5px cyan;
 }
 
 .game-frame {
