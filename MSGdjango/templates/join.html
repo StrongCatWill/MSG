@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Join</h1>
+            <a href="{% url 'index' %}"><i class="fa-solid fa-arrow-right-from-bracket fa-2x" style="color: #76ff05; size:15px"></i></a>
+        </div>
+        <form method="post" action="{% url 'create_user' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="username" placeholder="ID" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password (4 digit number)</label>
+                <input type="password" id="password" name="password" placeholder="Password (4 digit number)" required maxlength="4" minlength="4">
+            </div>
+            <button type="submit" id="memberJoin">Join Member</button>
+        </form>
+    </div>
+</body>
+</html>

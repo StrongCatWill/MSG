@@ -30,3 +30,6 @@ def run_snake_script(request):
         return JsonResponse({'output': result.stdout})
     except Exception as e:
         return JsonResponse({'error': str(e)})
+    
+def login(request):
+    return render(request, 'login.html')

@@ -1,0 +1,91 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+}
+
+.container {
+    border: 2px solid lime;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    width: 80%; /* 전체 너비의 80%를 사용 */
+    max-width: 600px; /* 최대 너비를 600px로 제한 */
+    height: 80%; /* 전체 높이의 80%를 사용 */
+    max-height: 400px; /* 최대 높이를 400px로 제한 */
+    background-color: black;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 수직 가운데 정렬 */
+    align-items: center; /* 수평 가운데 정렬 */
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: absolute; /* header를 절대 위치로 설정 */
+    top: 20px; /* container의 상단에서 20px 떨어지게 설정 */
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: yellow;
+    -webkit-text-stroke: 0.5px cyan;
+    position: absolute; /* h1을 절대 위치로 설정 */
+    top: 50%; /* container의 50% 높이 위치로 설정 */
+    left: 50%; /* container의 50% 너비 위치로 설정 */
+    transform: translate(-50%, -50%); /* 정중앙으로 이동 */
+}
+
+i {
+    font-size: 30px;
+}
+
+.input-group {
+    margin: 15px;
+}
+
+.input-group input {
+    width: 80%; /* container보다 좁게 설정 */
+    padding: 10px;
+    border: 2px solid lime;
+    background-color: black;
+    color: lime;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+button {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 10px auto;
+    font-size: 1.2rem;
+    background-color: limegreen;
+    color: black;
+    border: none;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive; /* 8-bit 폰트 */
+    text-decoration: none; /* 밑줄 제거 */
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+.score, .high-score {
+    font-size: 1.5rem;
+}

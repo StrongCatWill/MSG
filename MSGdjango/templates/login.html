@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSG Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Login</h1>
+            <br>
+            <a href="{% url 'index' %}"><i class="fa-solid fa-arrow-right-from-bracket fa-2x" style="color: #76ff05; size:15px"></i></a>
+        </div>
+        <form method="post" action="{% url 'user_login' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" id="id" name="username" placeholder="ID" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="password" placeholder="Password (4 digit number)" required>
+            </div>
+            <button type="submit" id="login">Login</button>
+        </form>
+        {% if messages %}
+            <div class="error-messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <br>
+        <div class="signup-prompt">
+            <p>Not a member yet?</p>
+            <a href="{% url 'join' %}" class="btn">Sign up and enjoy gaming</a>
+        </div>
+    </div>
+</body>
+</html>
