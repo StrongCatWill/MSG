@@ -1,22 +1,17 @@
-#!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+# settings.py
+
 import os
-import sys
 
+# 프로젝트의 BASE_DIR 설정
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def main():
-    """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MSGdjango.settings')
-    try:
-        from django.core.management import execute_from_command_line
-    except ImportError as exc:
-        raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
-        ) from exc
-    execute_from_command_line(sys.argv)
+# STATIC_ROOT 설정 추가
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# STATIC_URL 설정
+STATIC_URL = '/static/'
 
-if __name__ == '__main__':
-    main()
+# 추가적인 정적 파일 디렉토리 설정
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'MSGapp/static'),
+]

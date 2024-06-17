@@ -14,9 +14,9 @@
         <h2>Mega Simple Games</h2>
         <div class="button-container">
             <a href="{% url 'new_game' %}" class="btn">New Game</a>
-            <a href="{% url 'continue_game' %}" class="btn">Continue</a>
-            <a href="{% url 'login' %}" class="btn">Login</a>
-            <button class="btn" id="quit">Quit</button>
+            {% comment %} <a href="{% url 'continue_game' %}" class="btn">Continue</a> {% endcomment %}
+            {% comment %} <a href="{% url 'login' %}" class="btn">Login</a> {% endcomment %}
+            <a class="btn" id="quit">Quit</a>
         </div>
         <div class="copyright">
             <p>This Homepage and Games are belong to MIWON Team  <img id="logoPng" src="{% static 'img/BWU_logo.png' %}"></p>

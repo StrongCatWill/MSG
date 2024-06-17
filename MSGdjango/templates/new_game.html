@@ -11,8 +11,12 @@
 </head>
 <body>
     <div class="container">
+        <h1 class="logo">MSG!!</h1>
         <div class="game-option go-back">
             <button class="btn go-back-btn" id="go-back-button">Go Back</button>
+        </div>
+        <div class="game-option search-container">
+            <input type="text" id="game-search" placeholder="Search for a game..." class="search-input">
         </div>
         <div class="game-option">
             <img src="{% static 'img/snake.png' %}" alt="Snake Game">
@@ -62,12 +66,28 @@
                 window.location.href = "{% url 'pacman_game_view' %}";
             });
 
-            {% comment %} $('#connect-button').click(function() {
+            $('#connect-button').click(function() {
                 window.location.href = "{% url 'connect_game_view' %}";
-            }); {% endcomment %}
+            });
 
             $('#go-back-button').click(function() {
                 window.location.href = "{% url 'index' %}";
+            });
+
+            $('.logo').click(function() {
+                window.location.href = "{% url 'index' %}";
+            });
+
+            $('#game-search').on('input', function() {
+                const searchText = $(this).val().toLowerCase();
+                $('.retro-btn').each(function() {
+                    const gameName = $(this).text().toLowerCase();
+                    if (gameName.includes(searchText)) {
+                        $(this).addClass('highlight');
+                    } else {
+                        $(this).removeClass('highlight');
+                    }
+                });
             });
         });
     </script>
