@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            font-family: 'Press Start 2P', cursive;
+        }
+        #gameCanvas {
+            border: 1px solid black;
+            background-color: white;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            width: 420px;
+            margin-bottom: 10px;
+        }
+        .header div {
+            text-align: center;
+        }
+        .game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="score">Score<br>0000</div>
+        <div class="title">Pacman</div>
+        <div class="high-score">High Score<br>0000</div>
+    </div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div id="game-over" class="game-over">
+        <div class="game-over-text">Game Over</div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById("gameCanvas");
+            const context = canvas.getContext("2d");
+            const gameOverText = document.getElementById("game-over");
+
+            const state = { score: 0 };
+            const aim = { x: 5, y: 0 };
+            const pacman = { x: -40, y: -80 };
+            const ghosts = [
+                { position: { x: -180, y: 160 }, direction: { x: 5, y: 0 } },
+                { position: { x: -180, y: -160 }, direction: { x: 0, y: 5 } },
+                { position: { x: 100, y: 160 }, direction: { x: 0, y: -5 } },
+                { position: { x: 100, y: -160 }, direction: { x: -5, y: 0 } },
+            ];
+
+            const tiles = [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+                0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+                0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0,
+                0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+                0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+                0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+                0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+                0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0,
+                0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0,
+                0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ];
+
+            function drawSquare(x, y) {
+                context.fillRect(x, y, 20, 20);
+            }
+
+            function drawWorld() {
+                context.fillStyle = 'black';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                context.fillStyle = 'blue';
+                tiles.forEach((tile, index) => {
+                    if (tile > 0) {
+                        const x = (index % 20) * 20;
+                        const y = Math.floor(index / 20) * 20;
+                        drawSquare(x, y);
+
+                        if (tile === 1) {
+                            context.fillStyle = 'white';
+                            context.beginPath();
+                            context.arc(x + 10, y + 10, 2, 0, 2 * Math.PI);
+                            context.fill();
+                            context.fillStyle = 'blue';
+                        }
+                    }
+                });
+            }
+
+            function drawPacman() {
+                context.fillStyle = 'yellow';
+                context.beginPath();
+                context.arc(pacman.x + 10, pacman.y + 10, 10, 0, 2 * Math.PI);
+                context.fill();
+            }
+
+            function drawGhosts() {
+                context.fillStyle = 'red';
+                ghosts.forEach(ghost => {
+                    context.beginPath();
+                    context.arc(ghost.position.x + 10, ghost.position.y + 10, 10, 0, 2 * Math.PI);
+                    context.fill();
+                });
+            }
+
+            function movePacman() {
+                const nextX = pacman.x + aim.x;
+                const nextY = pacman.y + aim.y;
+
+                if (isValidMove(nextX, nextY)) {
+                    pacman.x = nextX;
+                    pacman.y = nextY;
+                }
+
+                const index = offset(pacman.x, pacman.y);
+                if (tiles[index] === 1) {
+                    tiles[index] = 2;
+                    state.score += 1;
+                    document.querySelector(".score").innerHTML = `Score<br>${state.score}`;
+                }
+            }
+
+            function moveGhosts() {
+                ghosts.forEach(ghost => {
+                    const nextX = ghost.position.x + ghost.direction.x;
+                    const nextY = ghost.position.y + ghost.direction.y;
+
+                    if (isValidMove(nextX, nextY)) {
+                        ghost.position.x = nextX;
+                        ghost.position.y = nextY;
+                    } else {
+                        const directions = [
+                            { x: 5, y: 0 },
+                            { x: -5, y: 0 },
+                            { x: 0, y: 5 },
+                            { x: 0, y: -5 },
+                        ];
+                        ghost.direction = directions[Math.floor(Math.random() * directions.length)];
+                    }
+                });
+            }
+
+            function isValidMove(x, y) {
+                const index = offset(x, y);
+                return tiles[index] > 0;
+            }
+
+            function offset(x, y) {
+                const col = Math.floor((x + 200) / 20);
+                const row = Math.floor((180 - y) / 20);
+                return col + row * 20;
+            }
+
+            function gameOver() {
+                gameOverText.style.display = "block";
+                setTimeout(() => {
+                    if (state.score > parseInt(document.querySelector(".high-score").innerHTML.split("<br>")[1])) {
+                        document.querySelector(".high-score").innerHTML = `High Score<br>${state.score}`;
+                    }
+                    state.score = 0;
+                    document.querySelector(".score").innerHTML = "Score<br>0000";
+                    resetGame();
+                    gameOverText.style.display = "none";
+                }, 2000);
+            }
+
+            function resetGame() {
+                pacman.x = -40;
+                pacman.y = -80;
+                aim.x = 5;
+                aim.y = 0;
+                ghosts.forEach((ghost, index) => {
+                    ghost.position = [
+                        { x: -180, y: 160 },
+                        { x: -180, y: -160 },
+                        { x: 100, y: 160 },
+                        { x: 100, y: -160 },
+                    ][index];
+                });
+                drawWorld();
+            }
+
+            function loop() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawWorld();
+                movePacman();
+                drawPacman();
+                moveGhosts();
+                drawGhosts();
+
+                ghosts.forEach(ghost => {
+                    if (Math.abs(ghost.position.x - pacman.x) < 20 && Math.abs(ghost.position.y - pacman.y) < 20) {
+                        gameOver();
+                        return;
+                    }
+                });
+
+                setTimeout(loop, 100);
+            }
+
+            document.addEventListener("keydown", function(e) {
+                if (e.key === 'ArrowLeft' && isValidMove(pacman.x - 5, pacman.y)) {
+                    aim.x = -5;
+                    aim.y = 0;
+                } else if (e.key === 'ArrowUp' && isValidMove(pacman.x, pacman.y - 5)) {
+                    aim.x = 0;
+                    aim.y = -5;
+                } else if (e.key === 'ArrowRight' && isValidMove(pacman.x + 5, pacman.y)) {
+                    aim.x = 5;
+                    aim.y = 0;
+                } else if (e.key === 'ArrowDown' && isValidMove(pacman.x, pacman.y + 5)) {
+                    aim.x = 0;
+                    aim.y = 5;
+                }
+            });
+
+            resetGame();
+            loop();
+        });
+    </script>
+</body>
+</html>

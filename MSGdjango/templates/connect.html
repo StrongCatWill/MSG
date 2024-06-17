@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Four</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'snake_game.css' %}">
+    <link rel="stylesheet" href="{% static 'options.css' %}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            font-family: 'Press Start 2P', cursive;
+        }
+        #gameCanvas {
+            border: 1px solid black;
+            background-color: white;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            width: 420px;
+            margin-bottom: 10px;
+        }
+        .header div {
+            text-align: center;
+        }
+        .game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .settings-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="score">Score<br>0000</div>
+        <div class="title">Connect Four</div>
+        <div class="high-score">High Score<br>0000</div>
+    </div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="settings-icon" id="settings-icon">
+        <img src="{% static 'img/settings.png' %}" alt="Settings">
+    </div>
+    <div id="game-over" class="game-over">
+        <div class="game-over-text">Game Over</div>
+    </div>
+    
+    {% include 'options.html' %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById("gameCanvas");
+            const context = canvas.getContext("2d");
+            const settingsIcon = document.getElementById("settings-icon");
+            const optionTool = document.getElementById("option-tool");
+            const closeSettings = document.getElementById("close-settings");
+            const continueGame = document.getElementById("continue-game");
+            const backToMain = document.getElementById("back-to-main");
+            const backToTitle = document.getElementById("back-to-title");
+            const quitGame = document.getElementById("quit-game");
+            const gameOverText = document.getElementById("game-over");
+
+            settingsIcon.addEventListener("click", function() {
+                optionTool.style.display = "block";
+            });
+
+            closeSettings.addEventListener("click", function() {
+                optionTool.style.display = "none";
+            });
+
+            continueGame.addEventListener("click", function() {
+                optionTool.style.display = "none";
+            });
+
+            backToMain.addEventListener("click", function() {
+                window.location.href = "{% url 'new_game' %}";
+            });
+
+            backToTitle.addEventListener("click", function() {
+                window.location.href = "{% url 'index' %}";
+            });
+
+            quitGame.addEventListener("click", function() {
+                window.close();
+            });
+
+            const turns = { 'red': 'yellow', 'yellow': 'red' };
+            const state = { 'player': 'yellow', 'rows': Array(8).fill(0), 'score': 0, 'maxScore': 0 };
+
+            function drawLine(x1, y1, x2, y2) {
+                context.beginPath();
+                context.moveTo(x1, y1);
+                context.lineTo(x2, y2);
+                context.stroke();
+            }
+
+            function drawGrid() {
+                context.fillStyle = 'lightblue';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (let x = 50; x < 400; x += 50) {
+                    drawLine(x, 0, x, 400);
+                }
+
+                for (let y = 50; y < 400; y += 50) {
+                    drawLine(0, y, 400, y);
+                }
+
+                for (let x = 25; x < 400; x += 50) {
+                    for (let y = 25; y < 400; y += 50) {
+                        context.beginPath();
+                        context.arc(x, y, 20, 0, 2 * Math.PI);
+                        context.fillStyle = 'white';
+                        context.fill();
+                        context.stroke();
+                    }
+                }
+            }
+
+            function drawCircle(x, y, color) {
+                context.beginPath();
+                context.arc(x, y, 20, 0, 2 * Math.PI);
+                context.fillStyle = color;
+                context.fill();
+                context.stroke();
+            }
+
+            function tap(event) {
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                const player = state.player;
+                const rows = state.rows;
+
+                const row = Math.floor(x / 50);
+                const count = rows[row];
+
+                if (count >= 8) return;
+
+                const newX = row * 50 + 25;
+                const newY = (7 - count) * 50 + 25;
+
+                drawCircle(newX, newY, player);
+
+                rows[row] += 1;
+                if (player === 'yellow') {
+                    state.score += 10;
+                    document.querySelector(".score").innerHTML = "Score<br>" + state.score;
+                }
+
+                if (checkGameOver()) {
+                    gameOver();
+                } else {
+                    state.player = turns[player];
+                }
+            }
+
+            function checkGameOver() {
+                for (let i = 0; i < 8; i++) {
+                    if (state.rows[i] < 8) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function resetGame() {
+                state.rows = Array(8).fill(0);
+                state.player = 'yellow';
+                state.score = 0;
+                document.querySelector(".score").innerHTML = "Score<br>" + state.score;
+                drawGrid();
+                gameOverText.style.display = "none";
+            }
+
+            function gameOver() {
+                gameOverText.style.display = "block";
+                setTimeout(() => {
+                    if (state.score > state.maxScore) {
+                        state.maxScore = state.score;
+                        document.querySelector(".high-score").innerHTML = "High Score<br>" + state.maxScore;
+                    }
+                    resetGame();
+                }, 2000);
+            }
+
+            canvas.addEventListener('click', tap);
+
+            drawGrid();
+        });
+    </script>
+</body>
+</html>

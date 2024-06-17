@@ -83,8 +83,8 @@
             };
 
             let food = {
-                x: 320,
-                y: 320
+                x: getRandomInt(0, 25) * grid,
+                y: getRandomInt(0, 25) * grid
             };
 
             function getRandomInt(min, max) {
@@ -104,8 +104,10 @@
                 }
                 score = 0;
                 document.querySelector(".score").innerHTML = "Score<br>" + score;
+                // 무작위 위치로 먹이 재설정
                 food.x = getRandomInt(0, 25) * grid;
                 food.y = getRandomInt(0, 25) * grid;
+                console.log(`New food position: (${food.x}, ${food.y})`); // 디버깅 로그
                 gameOverText.style.display = "none";
             }
 
@@ -152,6 +154,7 @@
                             document.querySelector(".score").innerHTML = "Score<br>" + score;
                             food.x = getRandomInt(0, 25) * grid;
                             food.y = getRandomInt(0, 25) * grid;
+                            console.log(`New food position: (${food.x}, ${food.y})`); // 디버깅 로그
                         }
 
                         for (let i = index + 1; i < snake.cells.length; i++) {

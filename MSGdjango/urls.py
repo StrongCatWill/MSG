@@ -27,6 +27,8 @@ urlpatterns = [
     path('tictactoe-game/', views.tictactoe_game_view, name='tictactoe_game_view'),
     path('typing-game/', views.typing_game_view, name='typing_game_view'),
     path('flappy-game/', views.flappy_game_view, name='flappy_game_view'),
+    path('connect-game/', views.connect_game_view, name='connect_game_view'),
+    path('pacman-game/', views.pacman_game_view, name='pacman_game_view'),
     
     path('login/', views.login_view, name='login'),  # 로그인 페이지 렌더링
     path('login/submit/', views.user_login, name='user_login'),  # 로그인 처리

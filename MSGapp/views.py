@@ -31,6 +31,12 @@ def typing_game_view(request):
 def flappy_game_view(request):
     return render(request, 'flappy_game.html')
 
+def connect_game_view(request):
+    return render(request, 'connect.html')
+
+def pacman_game_view(request):
+    return render(request, 'pacman.html')
+
 def login_view(request):
     return render(request, 'login.html')
 
