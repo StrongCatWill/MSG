@@ -33,6 +33,5 @@ urlpatterns = [
     path('join/', views.create_user, name='join'),  # 회원가입 처리
     path('create/', views.create_user, name='create_user'),
 
-    path('app/', include('MSGapp.urls')),  # 'admin URL. 유저 확인하게 만듦. 
-
+    path('app/', include('MSGapp.urls')),  # 'MSGapp.urls'를 포함하도록 수정
 ]
