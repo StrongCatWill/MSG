@@ -14,8 +14,8 @@
         <h2>Mega Simple Games</h2>
         <div class="button-container">
             <a href="{% url 'new_game' %}" class="btn">New Game</a>
-            <a href="{% url 'continue_game' %}" class="btn">Continue</a>
-            <a href="{% url 'login' %}" class="btn">Login</a>
+            {% comment %} <a href="{% url 'continue_game' %}" class="btn">Continue</a>
+            <a href="{% url 'login' %}" class="btn">Login</a> {% endcomment %}
             <button class="btn" id="quit">Quit</button>
         </div>
         <div class="copyright">
